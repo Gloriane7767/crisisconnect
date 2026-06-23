@@ -32,7 +32,7 @@ Built using **prompt engineering** with Claude AI (claude-sonnet-4-6).
 
 ## 🚀 Live Demo
 
-👉 **[Try CrisisConnect Live](https://YOUR-USERNAME.github.io/crisisconnect)**
+👉 **[Try CrisisConnect Live](https://Gloriane7767.github.io/crisisconnect)**
 
 ---
 
