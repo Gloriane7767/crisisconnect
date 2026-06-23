@@ -51,7 +51,7 @@ crisisconnect/
 
 1. Clone the repo:
 ```bash
-git clone https://github.com/YOUR-USERNAME/crisisconnect.git
+git clone https://github.com/Gloriane7767/crisisconnect.git
 cd crisisconnect
 ```
 
