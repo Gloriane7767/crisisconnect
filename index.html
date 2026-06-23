@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>CrisisConnect — AI Tool for IDPs in Cameroon</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --dark: #0B2D3A;
+      --teal: #0D7377;
+      --mint: #02C39A;
+      --amber: #E8A838;
+      --cream: #F5F0E8;
+      --white: #FFFFFF;
+      --gray: #64748b;
+      --lgray: #e2e8f0;
+    }
+
+    body { font-family: 'Inter', sans-serif; background: var(--cream); color: #1e293b; line-height: 1.6; }
+
+    /* NAV */
+    nav { background: var(--dark); padding: 0 5%; display: flex; align-items: center; justify-content: space-between; height: 60px; position: sticky; top: 0; z-index: 100; }
+    .nav-logo { color: var(--mint); font-weight: 700; font-size: 18px; text-decoration: none; display: flex; align-items: center; gap: 8px; }
+    .nav-logo span { color: #fff; font-weight: 400; font-size: 13px; }
+    .nav-links { display: flex; gap: 24px; }
+    .nav-links a { color: #94a3b8; text-decoration: none; font-size: 13px; transition: color 0.2s; }
+    .nav-links a:hover { color: var(--mint); }
+
+    /* HERO */
+    .hero { background: var(--dark); padding: 80px 5% 70px; position: relative; overflow: hidden; }
+    .hero::before { content: ''; position: absolute; top: -60px; right: -60px; width: 400px; height: 400px; background: var(--teal); border-radius: 50%; opacity: 0.12; }
+    .hero::after { content: ''; position: absolute; bottom: -80px; right: 80px; width: 250px; height: 250px; background: var(--mint); border-radius: 50%; opacity: 0.08; }
+    .hero-badge { display: inline-block; background: var(--amber); color: var(--dark); font-size: 11px; font-weight: 700; padding: 4px 12px; border-radius: 20px; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 20px; }
+    .hero h1 { font-family: 'Playfair Display', serif; font-size: clamp(36px, 6vw, 60px); color: #fff; line-height: 1.1; margin-bottom: 16px; position: relative; }
+    .hero h1 em { color: var(--mint); font-style: normal; }
+    .hero p { color: #94a3b8; font-size: 16px; max-width: 560px; margin-bottom: 32px; position: relative; }
+    .hero-btns { display: flex; gap: 12px; flex-wrap: wrap; position: relative; }
+    .btn-primary { background: var(--mint); color: var(--dark); padding: 12px 24px; border-radius: 8px; text-decoration: none; font-weight: 600; font-size: 14px; transition: opacity 0.2s; }
+    .btn-primary:hover { opacity: 0.88; }
+    .btn-outline { border: 1.5px solid #475569; color: #94a3b8; padding: 12px 24px; border-radius: 8px; text-decoration: none; font-weight: 500; font-size: 14px; transition: all 0.2s; }
+    .btn-outline:hover { border-color: var(--mint); color: var(--mint); }
+
+    /* STATS BAR */
+    .stats-bar { background: var(--teal); padding: 20px 5%; display: flex; justify-content: space-around; flex-wrap: wrap; gap: 16px; }
+    .stat { text-align: center; color: #fff; }
+    .stat strong { display: block; font-size: 26px; font-weight: 700; color: var(--amber); }
+    .stat span { font-size: 11px; opacity: 0.85; }
+
+    /* SECTIONS */
+    section { padding: 64px 5%; }
+    .section-label { font-size: 11px; font-weight: 700; letter-spacing: 2px; color: var(--teal); text-transform: uppercase; margin-bottom: 10px; }
+    .section-title { font-family: 'Playfair Display', serif; font-size: clamp(26px, 4vw, 38px); color: var(--dark); margin-bottom: 14px; }
+    .section-sub { color: var(--gray); font-size: 15px; max-width: 600px; margin-bottom: 40px; }
+
+    /* PROBLEM */
+    .problem { background: #fff; }
+    .gap-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; }
+    .gap-card { background: var(--cream); border-radius: 12px; padding: 24px 20px; border-left: 4px solid var(--teal); }
+    .gap-card .icon { font-size: 28px; margin-bottom: 12px; }
+    .gap-card h3 { font-size: 15px; font-weight: 600; color: var(--dark); margin-bottom: 8px; }
+    .gap-card p { font-size: 13px; color: var(--gray); }
+
+    /* CHATBOT */
+    .chatbot-section { background: var(--dark); }
+    .chatbot-section .section-title { color: #fff; }
+    .chatbot-section .section-sub { color: #94a3b8; }
+    #chat-app { background: #fff; border-radius: 16px; overflow: hidden; max-width: 700px; height: 560px; display: flex; flex-direction: column; box-shadow: 0 20px 60px rgba(0,0,0,0.3); }
+    .chat-header { background: var(--dark); padding: 14px 18px; display: flex; align-items: center; gap: 12px; border-bottom: 1px solid #1a3a4a; }
+    .chat-avatar { width: 36px; height: 36px; background: var(--teal); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 18px; flex-shrink: 0; }
+    .chat-header-info h3 { color: #fff; font-size: 14px; font-weight: 600; }
+    .chat-header-info p { color: var(--mint); font-size: 11px; }
+    .mode-tabs { display: flex; border-bottom: 1px solid var(--lgray); flex-shrink: 0; }
+    .tab { flex: 1; padding: 9px 6px; font-size: 11px; font-weight: 500; border: none; cursor: pointer; background: #f8fafc; color: #64748b; border-bottom: 2px solid transparent; transition: all 0.15s; }
+    .tab.active { background: #fff; color: var(--teal); border-bottom-color: var(--teal); }
+    .ctx-bar { padding: 6px 14px; background: #f8fafc; border-bottom: 1px solid var(--lgray); font-size: 11px; color: #64748b; flex-shrink: 0; }
+    .ctx-bar strong { color: var(--teal); }
+    #messages { flex: 1; overflow-y: auto; padding: 14px; display: flex; flex-direction: column; gap: 10px; }
+    .msg { max-width: 82%; display: flex; flex-direction: column; }
+    .msg.bot { align-self: flex-start; }
+    .msg.user { align-self: flex-end; }
+    .bubble { padding: 10px 13px; border-radius: 12px; font-size: 13px; line-height: 1.55; white-space: pre-wrap; }
+    .msg.bot .bubble { background: #f1f5f9; color: #1e293b; border-bottom-left-radius: 4px; }
+    .msg.user .bubble { background: var(--dark); color: #fff; border-bottom-right-radius: 4px; }
+    .msg-label { font-size: 10px; color: #94a3b8; padding: 2px 4px; }
+    .msg.user .msg-label { text-align: right; }
+    .typing-dots { display: flex; gap: 4px; padding: 12px; }
+    .dot { width: 6px; height: 6px; background: var(--teal); border-radius: 50%; animation: bounce 1.2s infinite; }
+    .dot:nth-child(2) { animation-delay: 0.2s; }
+    .dot:nth-child(3) { animation-delay: 0.4s; }
+    @keyframes bounce { 0%,60%,100%{transform:translateY(0)} 30%{transform:translateY(-6px)} }
+    .quick-btns { display: flex; gap: 6px; padding: 8px 14px; overflow-x: auto; flex-shrink: 0; border-top: 1px solid var(--lgray); background: #f8fafc; }
+    .quick-btns::-webkit-scrollbar { height: 3px; }
+    .qbtn { white-space: nowrap; padding: 5px 10px; font-size: 11px; background: #fff; border: 1px solid #cbd5e1; border-radius: 20px; cursor: pointer; color: #475569; transition: all 0.1s; flex-shrink: 0; }
+    .qbtn:hover { border-color: var(--teal); color: var(--teal); }
+    .input-row { display: flex; gap: 8px; padding: 10px 14px; border-top: 1px solid var(--lgray); background: #fff; flex-shrink: 0; }
+    #user-input { flex: 1; padding: 9px 12px; font-size: 13px; border: 1px solid #cbd5e1; border-radius: 8px; outline: none; font-family: inherit; }
+    #user-input:focus { border-color: var(--teal); }
+    #send-btn { width: 38px; height: 38px; background: var(--dark); border: none; border-radius: 8px; cursor: pointer; color: #fff; font-size: 15px; transition: background 0.15s; flex-shrink: 0; }
+    #send-btn:hover { background: var(--teal); }
+    #send-btn:disabled { background: #94a3b8; cursor: not-allowed; }
+    .chat-disclaimer { font-size: 10px; color: #94a3b8; text-align: center; padding: 4px 0 8px; flex-shrink: 0; }
+
+    /* HOW IT WORKS */
+    .how { background: var(--cream); }
+    .steps { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 24px; }
+    .step { background: #fff; border-radius: 12px; padding: 24px 20px; text-align: center; }
+    .step-num { width: 40px; height: 40px; background: var(--teal); color: #fff; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 16px; margin: 0 auto 14px; }
+    .step h3 { font-size: 14px; font-weight: 600; color: var(--dark); margin-bottom: 8px; }
+    .step p { font-size: 12px; color: var(--gray); }
+
+    /* ETHICS */
+    .ethics { background: #fff; }
+    .ethics-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; }
+    .ethics-card { border: 1px solid var(--lgray); border-radius: 10px; padding: 18px; }
+    .ethics-card .risk { font-size: 11px; font-weight: 700; color: #dc2626; text-transform: uppercase; margin-bottom: 6px; display: flex; align-items: center; gap: 6px; }
+    .ethics-card .risk::before { content: '⚠'; }
+    .ethics-card h4 { font-size: 13px; font-weight: 600; color: var(--dark); margin-bottom: 6px; }
+    .ethics-card p { font-size: 12px; color: var(--gray); margin-bottom: 8px; }
+    .ethics-card .fix { font-size: 12px; color: #16a34a; font-weight: 500; }
+    .ethics-card .fix::before { content: '✓ '; }
+
+    /* SLIDES */
+    .slides-section { background: var(--dark); text-align: center; }
+    .slides-section .section-title { color: #fff; }
+    .slides-section .section-sub { color: #94a3b8; margin: 0 auto 32px; }
+    .download-card { background: #fff; border-radius: 16px; padding: 36px; display: inline-flex; flex-direction: column; align-items: center; gap: 16px; max-width: 380px; width: 100%; }
+    .pptx-icon { font-size: 56px; }
+    .download-card h3 { font-size: 16px; font-weight: 600; color: var(--dark); }
+    .download-card p { font-size: 13px; color: var(--gray); text-align: center; }
+    .btn-download { background: var(--teal); color: #fff; padding: 12px 28px; border-radius: 8px; text-decoration: none; font-weight: 600; font-size: 14px; transition: opacity 0.2s; }
+    .btn-download:hover { opacity: 0.88; }
+
+    /* FOOTER */
+    footer { background: #060f14; padding: 28px 5%; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; }
+    footer p { color: #475569; font-size: 12px; }
+    footer a { color: var(--mint); text-decoration: none; font-size: 12px; }
+
+    @media (max-width: 600px) {
+      .nav-links { display: none; }
+      .stats-bar { gap: 24px; }
+      #chat-app { height: 520px; }
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <a class="nav-logo" href="#">🤝 CrisisConnect <span>/ Cameroon IDP AI Tool</span></a>
+  <div class="nav-links">
+    <a href="#problem">Problem</a>
+    <a href="#chatbot">Live Demo</a>
+    <a href="#ethics">Ethics</a>
+    <a href="#slides">Slides</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-badge">AI for Humanitarian Action</div>
+  <h1>Connecting <em>displaced people</em><br>to the help they need</h1>
+  <p>An AI-powered needs and aid matching tool for Internally Displaced Persons in Cameroon — powered by Claude AI and prompt engineering.</p>
+  <div class="hero-btns">
+    <a href="#chatbot" class="btn-primary">Try the Live Demo</a>
+    <a href="#slides" class="btn-outline">Download Slides</a>
+  </div>
+</section>
+
+<!-- STATS -->
+<div class="stats-bar">
+  <div class="stat"><strong>844,953</strong><span>IDPs in Cameroon (2025)</span></div>
+  <div class="stat"><strong>3.3M</strong><span>People needing assistance</span></div>
+  <div class="stat"><strong>17%</strong><span>Of funding covered</span></div>
+  <div class="stat"><strong>#1</strong><span>Most neglected crisis*</span></div>
+</div>
+
+<!-- PROBLEM -->
+<section class="problem" id="problem">
+  <p class="section-label">The Challenge</p>
+  <h2 class="section-title">Three gaps blocking aid delivery</h2>
+  <p class="section-sub">The Cameroon crisis is one of the world's most neglected displacement emergencies. IDPs face critical barriers in accessing the help they need.</p>
+  <div class="gap-grid">
+    <div class="gap-card">
+      <div class="icon">📡</div>
+      <h3>Information Gap</h3>
+      <p>IDPs don't know what aid is available, where it is, or how to access it — especially in their own language.</p>
+    </div>
+    <div class="gap-card">
+      <div class="icon">🔗</div>
+      <h3>Coordination Gap</h3>
+      <p>NGOs and agencies lack a unified system to match available resources to specific IDP needs in real time.</p>
+    </div>
+    <div class="gap-card">
+      <div class="icon">🌐</div>
+      <h3>Language Gap</h3>
+      <p>Aid communication happens mostly in French, but IDPs speak Pidgin English, Fulfulde, and other local languages.</p>
+    </div>
+  </div>
+</section>
+
+<!-- CHATBOT -->
+<section class="chatbot-section" id="chatbot">
+  <p class="section-label" style="color: var(--mint);">Live Demo</p>
+  <h2 class="section-title">Try CrisisConnect</h2>
+  <p class="section-sub">Switch between IDP mode (for displaced people) and Coordinator mode (for NGOs). Powered by real Claude AI.</p>
+
+  <div id="chat-app">
+    <div class="chat-header">
+      <div class="chat-avatar">🤝</div>
+      <div class="chat-header-info">
+        <h3>CrisisConnect</h3>
+        <p>AI Humanitarian Assistant · Cameroon Crisis Response</p>
+      </div>
+    </div>
+    <div class="mode-tabs">
+      <button class="tab active" id="tab-idp" onclick="switchMode('idp')">👥 Mode 1 — For IDPs</button>
+      <button class="tab" id="tab-ngo" onclick="switchMode('ngo')">🏢 Mode 2 — For NGO Coordinators</button>
+    </div>
+    <div class="ctx-bar">
+      <strong id="ctx-label">IDP Mode</strong> — <span id="ctx-desc">Ask about food, shelter, medical care, education, or protection support near you.</span>
+    </div>
+    <div id="messages"></div>
+    <div class="quick-btns" id="quick-btns"></div>
+    <div class="input-row">
+      <input id="user-input" type="text" placeholder="Type in English, French, or Pidgin..." />
+      <button id="send-btn" onclick="sendMsg()">➤</button>
+    </div>
+    <p class="chat-disclaimer">AI assistant · Verify aid locations before traveling · Emergency: 117</p>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section class="how" id="how">
+  <p class="section-label">How It Works</p>
+  <h2 class="section-title">Prompt engineering at the core</h2>
+  <p class="section-sub">CrisisConnect uses carefully designed system prompts to guide Claude AI into acting as a humanitarian specialist.</p>
+  <div class="steps">
+    <div class="step"><div class="step-num">1</div><h3>IDP sends a message</h3><p>Via WhatsApp, SMS, or this web interface — in any language they speak.</p></div>
+    <div class="step"><div class="step-num">2</div><h3>AI identifies needs</h3><p>The system prompt guides Claude to ask about location, need type, and vulnerabilities.</p></div>
+    <div class="step"><div class="step-num">3</div><h3>Matches to resources</h3><p>Claude recommends the nearest verified organization — IOM, UNHCR, WFP, MSF, UNICEF, and others.</p></div>
+    <div class="step"><div class="step-num">4</div><h3>Actionable next step</h3><p>Each response ends with a clear follow-up so the IDP always knows what to do next.</p></div>
+  </div>
+</section>
+
+<!-- ETHICS -->
+<section class="ethics" id="ethics">
+  <p class="section-label">Ethical Considerations</p>
+  <h2 class="section-title">Responsible AI for vulnerable people</h2>
+  <p class="section-sub">Every AI tool that serves displaced people carries serious responsibilities. Here is how CrisisConnect addresses them.</p>
+  <div class="ethics-grid">
+    <div class="ethics-card">
+      <p class="risk">Security Risk</p>
+      <h4>Location data could endanger IDPs</h4>
+      <p>Armed groups could exploit location data shared with the chatbot.</p>
+      <p class="fix">No GPS or exact addresses collected. General zones only.</p>
+    </div>
+    <div class="ethics-card">
+      <p class="risk">Bias Risk</p>
+      <h4>AI trained mostly on English/French</h4>
+      <p>Fulfulde and Pidgin speakers may get lower quality responses.</p>
+      <p class="fix">Prompts tested in local languages. Community validators used.</p>
+    </div>
+    <div class="ethics-card">
+      <p class="risk">Misinformation Risk</p>
+      <h4>Wrong aid location = dangerous journey</h4>
+      <p>Outdated aid point info could send IDPs to locations with no help.</p>
+      <p class="fix">Aid data verified weekly. Users reminded to confirm before traveling.</p>
+    </div>
+    <div class="ethics-card">
+      <p class="risk">Exclusion Risk</p>
+      <h4>Many IDPs have no phone</h4>
+      <p>A web/WhatsApp-only tool excludes the most marginalized.</p>
+      <p class="fix">USSD and community radio channels planned for offline access.</p>
+    </div>
+    <div class="ethics-card">
+      <p class="risk">Dependency Risk</p>
+      <h4>AI should not replace aid workers</h4>
+      <p>Over-reliance on AI reduces human accountability in crisis response.</p>
+      <p class="fix">Positioned as a complement. Human override always available.</p>
+    </div>
+    <div class="ethics-card">
+      <p class="risk">Transparency Risk</p>
+      <h4>Users may not know it's AI</h4>
+      <p>Deceptive AI in humanitarian contexts erodes trust.</p>
+      <p class="fix">AI identity disclosed at every conversation start.</p>
+    </div>
+  </div>
+</section>
+
+<!-- SLIDES -->
+<section class="slides-section" id="slides">
+  <p class="section-label" style="color: var(--mint);">Project Presentation</p>
+  <h2 class="section-title">Download the Full Slides</h2>
+  <p class="section-sub">The complete 6-slide project presentation including problem statement, AI solution, application, ethical considerations, and key takeaways.</p>
+  <div class="download-card">
+    <div class="pptx-icon">📊</div>
+    <h3>CrisisConnect — Project Slides</h3>
+    <p>6 slides · PowerPoint format · Includes speaker notes</p>
+    <a class="btn-download" href="CrisisConnect_IDP_AI_Cameroon.pptx" download>⬇ Download Slides (.pptx)</a>
+  </div>
+</section>
+
+<footer>
+  <p>CrisisConnect · Built with Claude AI · Cameroon IDP Crisis Response Project</p>
+  <a href="https://github.com" target="_blank">View on GitHub →</a>
+</footer>
+
+<script>
+const SYSTEMS = {
+  idp: `You are CrisisConnect, a compassionate humanitarian AI assistant helping Internally Displaced Persons (IDPs) in Cameroon. Nearly 845,000 people are displaced due to the Anglophone crisis (Northwest/Southwest) and Far North conflicts.
+
+Your role:
+1. Find out the person's region or town (Northwest, Southwest, Far North, Littoral, Centre, East, Adamawa, etc.)
+2. Identify their most urgent need: food, shelter, medical care, education, protection, or psychosocial support
+3. Ask about household size and vulnerabilities (children, elderly, pregnant women, disability)
+4. Give practical, actionable guidance on where to get help
+
+Key organizations in Cameroon:
+- IOM: shelter, NFIs, displacement tracking
+- UNHCR: protection, cash assistance, shelter kits
+- UNICEF: child protection, nutrition, education, WASH
+- WFP: food assistance, cash for food
+- MSF: medical care (especially NW/SW)
+- NRC: legal aid, education, shelter
+- IRC: health, safety, economic recovery
+- Emergency: 117 (police), 15 (medical), 1513 (social emergencies)
+
+Rules:
+- Respond in the same language the person uses (English, French, or Cameroonian Pidgin)
+- Keep replies under 150 words — simple and actionable
+- Never ask for GPS or full name — use general zones only
+- Always end with a follow-up question or next step
+- Remind users to confirm aid locations before traveling
+- If someone is in immediate danger, give 117 right away
+- Always disclose you are an AI if asked`,
+
+  ngo: `You are CrisisConnect Coordinator, an AI assistant for humanitarian coordinators, NGO staff, and UN agency workers in Cameroon.
+
+You help with:
+1. NEEDS MAPPING: Summarize IDP needs by sector and region
+2. RESOURCE GAPS: Identify areas with unmet needs and no organizational presence  
+3. COORDINATION REPORTS: Generate structured summaries for cluster meetings
+4. RESPONSE PLANNING: Suggest prioritization by severity and population size
+
+Crisis context (2025-2026):
+- 844,953 IDPs; NW/SW: Anglophone crisis; Far North: Boko Haram, floods, conflict
+- 3.3 million need assistance; only 17% of funding covered
+- Clusters: Food Security (WFP), Shelter/NFI (IOM), Health (WHO/MSF), Protection (UNHCR), Education (UNICEF)
+
+Use clear headers, severity levels (Critical/High/Medium/Low), and actionable recommendations.`
+};
+
+const WELCOME = {
+  idp: "Hello! I am CrisisConnect, your humanitarian assistant.\n\nI can help you find food, shelter, medical care, education, and protection support in Cameroon.\n\nWhich region or town are you currently in?",
+  ngo: "Welcome to CrisisConnect Coordinator mode.\n\nI can help you map IDP needs, identify resource gaps, and generate coordination reports.\n\nWhat would you like to work on today?"
+};
+
+const QUICK = {
+  idp: ["I need food assistance","Where can I find shelter?","I need medical help","School for my children","I feel unsafe"],
+  ngo: ["Gap analysis — Far North","Food Security Cluster report","NW/SW protection needs","Generate coordination brief","IDP numbers by region"]
+};
+
+let mode = 'idp', history = [], loading = false;
+
+function renderQuick() {
+  document.getElementById('quick-btns').innerHTML = QUICK[mode].map(t =>
+    `<button class="qbtn" onclick="quickSend('${t.replace(/'/g,"\\'")}'">${t}</button>`
+  ).join('');
+}
+
+function switchMode(m) {
+  if (m === mode) return;
+  mode = m;
+  history = [];
+  document.getElementById('tab-idp').classList.toggle('active', m === 'idp');
+  document.getElementById('tab-ngo').classList.toggle('active', m === 'ngo');
+  document.getElementById('ctx-label').textContent = m === 'idp' ? 'IDP Mode' : 'Coordinator Mode';
+  document.getElementById('ctx-desc').textContent = m === 'idp'
+    ? 'Ask about food, shelter, medical care, education, or protection support near you.'
+    : 'Needs mapping, gap analysis, cluster reports, and response planning.';
+  document.getElementById('user-input').placeholder = m === 'idp'
+    ? 'Type in English, French, or Pidgin...'
+    : 'Ask about needs, gaps, or coordination reports...';
+  document.getElementById('messages').innerHTML = '';
+  renderQuick();
+  addMsg('bot', WELCOME[m]);
+}
+
+function addMsg(role, text) {
+  const msgs = document.getElementById('messages');
+  const div = document.createElement('div');
+  div.className = `msg ${role}`;
+  div.id = role === 'typing' ? 'typing-ind' : '';
+  if (role === 'typing') {
+    div.innerHTML = `<div class="bubble"><div class="typing-dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div></div>`;
+  } else {
+    div.innerHTML = role === 'bot'
+      ? `<span class="msg-label">CrisisConnect</span><div class="bubble">${text.replace(/\n/g,'<br>')}</div>`
+      : `<div class="bubble">${text}</div><span class="msg-label">You</span>`;
+  }
+  msgs.appendChild(div);
+  msgs.scrollTop = msgs.scrollHeight;
+}
+
+function quickSend(t) { document.getElementById('user-input').value = t; sendMsg(); }
+
+async function sendMsg() {
+  if (loading) return;
+  const input = document.getElementById('user-input');
+  const text = input.value.trim();
+  if (!text) return;
+  input.value = '';
+  addMsg('user', text);
+  history.push({ role: 'user', content: text });
+  loading = true;
+  document.getElementById('send-btn').disabled = true;
+  addMsg('typing', '');
+
+  try {
+    const res = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ model: 'claude-sonnet-4-6', max_tokens: 1000, system: SYSTEMS[mode], messages: history })
+    });
+    const data = await res.json();
+    const reply = data?.content?.[0]?.text || "Sorry, I could not get a response. Please try again.";
+    history.push({ role: 'assistant', content: reply });
+    document.getElementById('typing-ind')?.remove();
+    addMsg('bot', reply);
+  } catch (e) {
+    document.getElementById('typing-ind')?.remove();
+    addMsg('bot', 'Connection error. Please try again.\n\nFor emergencies, call 117.');
+    history.pop();
+  }
+  loading = false;
+  document.getElementById('send-btn').disabled = false;
+}
+
+document.getElementById('user-input').addEventListener('keydown', e => {
+  if (e.key === 'Enter') { e.preventDefault(); sendMsg(); }
+});
+
+renderQuick();
+addMsg('bot', WELCOME.idp);
+</script>
+</body>
+</html>
